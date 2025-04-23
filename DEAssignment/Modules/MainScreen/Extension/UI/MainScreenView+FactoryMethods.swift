@@ -36,11 +36,17 @@ extension MainScreenView {
                     HStack(spacing: .zero) {
                         Spacer()
                         self.createDefaultButtonView(action: viewModel.removeSelectedImage) {
-                            Image(systemName: self.filledCloseButtonImagePath)
-                                .resizable()
-                                .frame(width: 14, height: 14)
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.white, .black)
+                            ZStack {
+                                Circle()
+                                    .foregroundStyle(.white)
+                                    .frame(width: 16, height: 16)
+
+                                Image(systemName: self.filledCloseButtonImagePath)
+                                    .resizable()
+                                    .frame(width: 14, height: 14)
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.white, .black)
+                            }
                         }
                     }
                     Spacer()
@@ -68,6 +74,7 @@ extension MainScreenView {
             .presentationBackgroundInteraction(.enabled)
             .presentationDetents(self.viewModel.presentationDetents, selection: $viewModel.currentBottomSheetDetent)
             .ignoresSafeArea(.container, edges: .bottom)
+            .dynamicTypeSize(...DynamicTypeSize.xxLarge)
             .interactiveDismissDisabled()
     }
 }

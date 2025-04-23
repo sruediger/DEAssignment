@@ -51,18 +51,21 @@ extension MainScreenView {
             let emptySearchQuery = viewModel.searchQuery.isEmpty
             TextField(viewModel.searchBarPlaceholder, text: $viewModel.searchQuery, axis: .vertical)
                 .font(.system(size: viewModel.currentFontSize))
-                .frame(height: viewModel.searchInputHeight)
-                .scrollIndicators(.automatic)
-                .padding(.leading)
-                .lineLimit(10)
+                .frame(height: viewModel.searchInputHeight, alignment: .top)
+                .scrollIndicators(viewModel.searchInputScrollVisibility, axes: .vertical)
                 .onChange(of: viewModel.searchQuery) { viewModel.updateSearchBarFontSize() }
                 .animation(.smooth, value: viewModel.currentFontSize)
                 .padding([.leading, .top])
                 .lineLimit(10)
             
             if !emptySearchQuery {
-                self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
-                    Image(systemName: viewModel.resizeSearchInputImagePath)
+                VStack(spacing: .zero) {
+                    self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
+                        Image(systemName: viewModel.resizeSearchInputImagePath)
+                    }
+                    if viewModel.shouldExpandBottomSheet {
+                        Spacer()
+                    }
                 }
                 .transition(
                     .scale
@@ -70,7 +73,9 @@ extension MainScreenView {
                         .combined(with: .identity)
                     .animation(.smooth)
                 )
-                .padding([.top, .trailing])
+                .padding([.vertical, .trailing])
+                .padding(.trailing)
+                .padding(.top)
             }
         }
     }
@@ -109,7 +114,7 @@ extension MainScreenView {
                 .shadow(color: .black, radius: 1)
                 .overlay {
                     Image(systemName: BottomSheetButton.send.imagePath)
-                        .imageScale(.medium)
+                        .imageScale(.large)
                         .foregroundStyle(.white)
                         .padding(.horizontal, self.defaultPadding / 2)
                         .padding(.vertical, self.defaultPadding)
@@ -133,8 +138,6 @@ extension MainScreenView {
                     Spacer()
                 }
             }
-            
-            if viewModel.shouldExpandBottomSheet { Spacer() }
             
             HStack(spacing: .zero) {
                 self.cameraRollButtonView
