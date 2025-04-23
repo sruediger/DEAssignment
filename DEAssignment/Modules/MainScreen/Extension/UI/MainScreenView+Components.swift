@@ -62,6 +62,12 @@ extension MainScreenView {
                 self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
                     Image(systemName: viewModel.resizeSearchInputImagePath)
                 }
+                .transition(
+                    .scale
+                        .combined(with: .opacity)
+                        .combined(with: .identity)
+                    .animation(.smooth)
+                )
                 .padding([.top, .trailing])
             }
         }
@@ -121,7 +127,6 @@ extension MainScreenView {
                     
                     Spacer()
                 }
-                .transition(.scale.combined(with: .identity).animation(.easeInOut))
             }
             
             if viewModel.shouldExpandBottomSheet { Spacer() }
