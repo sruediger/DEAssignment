@@ -45,6 +45,7 @@ struct MainScreenView: MainScreen {
         }
         .sheet(isPresented: $viewModel.shouldPresentBottomSheet, content: self.createSearchBarBottomSheetView)
         .sheet(isPresented: $viewModel.shouldPresentImagePicker) { CameraRollView(selection: $viewModel.selectedImage) }
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .preferredColorScheme(.light)
     }
 }

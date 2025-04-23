@@ -51,18 +51,31 @@ extension MainScreenView {
             let emptySearchQuery = viewModel.searchQuery.isEmpty
             TextField(viewModel.searchBarPlaceholder, text: $viewModel.searchQuery, axis: .vertical)
                 .font(.system(size: viewModel.currentFontSize))
-                .frame(height: viewModel.searchInputHeight)
-                .scrollIndicators(.automatic)
-                .padding(.leading)
-                .lineLimit(10)
+                .frame(height: viewModel.searchInputHeight, alignment: .top)
+                .scrollIndicators(viewModel.searchInputScrollVisibility, axes: .vertical)
                 .onChange(of: viewModel.searchQuery) { viewModel.updateSearchBarFontSize() }
-                .animation(.easeInOut, value: viewModel.currentFontSize)
+                .animation(.smooth, value: viewModel.currentFontSize)
+                .padding([.leading, .top])
+                .lineLimit(10)
             
             if !emptySearchQuery {
-                self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
-                    Image(systemName: viewModel.resizeSearchInputImagePath)
+                VStack(spacing: .zero) {
+                    self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
+                        Image(systemName: viewModel.resizeSearchInputImagePath)
+                    }
+                    if viewModel.shouldExpandBottomSheet {
+                        Spacer()
+                    }
                 }
-                .padding([.top, .trailing])
+                .transition(
+                    .scale
+                        .combined(with: .opacity)
+                        .combined(with: .identity)
+                    .animation(.smooth)
+                )
+                .padding([.vertical, .trailing])
+                .padding(.trailing)
+                .padding(.top)
             }
         }
     }
@@ -101,7 +114,7 @@ extension MainScreenView {
                 .shadow(color: .black, radius: 1)
                 .overlay {
                     Image(systemName: BottomSheetButton.send.imagePath)
-                        .imageScale(.medium)
+                        .imageScale(.large)
                         .foregroundStyle(.white)
                         .padding(.horizontal, self.defaultPadding / 2)
                         .padding(.vertical, self.defaultPadding)
@@ -113,6 +126,9 @@ extension MainScreenView {
     var searchBarView: some View {
         VStack(spacing: self.defaultSpacing) {
             self.expandableTextView
+                .animation(.none, value: true)
+
+            if viewModel.shouldExpandBottomSheet && viewModel.selectedImage == nil { Spacer() }
             
             if let selectedImage = viewModel.selectedImage {
                 HStack(spacing: .zero) {
@@ -121,10 +137,7 @@ extension MainScreenView {
                     
                     Spacer()
                 }
-                .transition(.scale.combined(with: .identity).animation(.easeInOut))
             }
-            
-            if viewModel.shouldExpandBottomSheet { Spacer() }
             
             HStack(spacing: .zero) {
                 self.cameraRollButtonView
@@ -132,9 +145,9 @@ extension MainScreenView {
                 self.sendRequestButtonView
             }
             .padding(.horizontal)
-            .padding(.bottom, 2.5)
-            .animation(.interpolatingSpring(stiffness: 320, damping: 200), value: viewModel.shouldExpandBottomSheet)
+            .padding(.bottom, self.defaultPadding / 2)
         }
+        .animation(.interpolatingSpring(stiffness: 320, damping: 200), value: viewModel.shouldExpandBottomSheet)
     }
 }
 
