@@ -56,7 +56,9 @@ extension MainScreenView {
                 .padding(.leading)
                 .lineLimit(10)
                 .onChange(of: viewModel.searchQuery) { viewModel.updateSearchBarFontSize() }
-                .animation(.easeInOut, value: viewModel.currentFontSize)
+                .animation(.smooth, value: viewModel.currentFontSize)
+                .padding([.leading, .top])
+                .lineLimit(10)
             
             if !emptySearchQuery {
                 self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
@@ -119,6 +121,9 @@ extension MainScreenView {
     var searchBarView: some View {
         VStack(spacing: self.defaultSpacing) {
             self.expandableTextView
+                .animation(.none, value: true)
+
+            if viewModel.shouldExpandBottomSheet && viewModel.selectedImage == nil { Spacer() }
             
             if let selectedImage = viewModel.selectedImage {
                 HStack(spacing: .zero) {
@@ -137,9 +142,9 @@ extension MainScreenView {
                 self.sendRequestButtonView
             }
             .padding(.horizontal)
-            .padding(.bottom, 2.5)
-            .animation(.interpolatingSpring(stiffness: 320, damping: 200), value: viewModel.shouldExpandBottomSheet)
+            .padding(.bottom, self.defaultPadding / 2)
         }
+        .animation(.interpolatingSpring(stiffness: 320, damping: 200), value: viewModel.shouldExpandBottomSheet)
     }
 }
 
