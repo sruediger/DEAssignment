@@ -62,6 +62,12 @@ extension MainScreenView {
                 self.createDefaultButtonView(action: self.viewModel.resizeSearchInput) {
                     Image(systemName: viewModel.resizeSearchInputImagePath)
                 }
+                .transition(
+                    .scale
+                        .combined(with: .opacity)
+                        .combined(with: .identity)
+                    .animation(.smooth)
+                )
                 .padding([.top, .trailing])
             }
         }
