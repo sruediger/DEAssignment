@@ -7,6 +7,7 @@
 
 import UIKit
 import struct SwiftUI.PresentationDetent
+import struct SwiftUI.ScrollIndicatorVisibility
 
 /// Object that handles the `MainScreenView` interactions
 final class MainScreenViewModel: ObservableObject, InteractionDelegate {
@@ -26,7 +27,12 @@ final class MainScreenViewModel: ObservableObject, InteractionDelegate {
     /// Indicates whether the `BottomSheet` should be displayed
     @Published var shouldPresentBottomSheet: Bool
     /// Indicates whether the `BottomSheet` should be expanded
-    @Published var shouldExpandBottomSheet: Bool
+    @Published var shouldExpandBottomSheet: Bool {
+        willSet {
+            guard newValue else { return }
+            self.updateSearchBarFontSize()
+        }
+    }
     /// The current `BottomSheet` presentation detent
     @Published var currentBottomSheetDetent: PresentationDetent {
         willSet {
@@ -35,7 +41,13 @@ final class MainScreenViewModel: ObservableObject, InteractionDelegate {
         }
     }
     /// The `TextField` height
-    var searchInputHeight: CGFloat { !self.shouldExpandBottomSheet ? 50 : 220 }
+    var searchInputHeight: CGFloat {
+        let expandedSize = UIScreen.main.bounds.height * 0.4
+        let unexpandedSize = CGFloat(self.selectedImage != nil ? 32 : 50)
+        return self.shouldExpandBottomSheet ? expandedSize : unexpandedSize
+    }
+    /// Indicates whether the `TextField` scroll indicator is visible
+    var searchInputScrollVisibility: ScrollIndicatorVisibility { self.currentFontSize == 14 ? .visible : .hidden }
     /// The `ChipStackView` bottom padding
     let chipStackPadding: CGFloat
     
