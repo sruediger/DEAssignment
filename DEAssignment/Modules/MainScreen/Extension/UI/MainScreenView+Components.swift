@@ -121,7 +121,6 @@ extension MainScreenView {
                     
                     Spacer()
                 }
-                .transition(.scale.combined(with: .identity).animation(.easeInOut))
             }
             
             if viewModel.shouldExpandBottomSheet { Spacer() }
