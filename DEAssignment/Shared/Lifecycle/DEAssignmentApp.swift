@@ -11,7 +11,7 @@ import SwiftUI
 struct DEAssignmentApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainScreenView()
         }
     }
 }
